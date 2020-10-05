@@ -19,6 +19,7 @@ public class VisorMazo {
             is = new FileInputStream(jsonInputFile);
             // Creo el objeto JsonReader de Json.
             JsonReader reader = Json.createReader(is);
+            System.out.println(reader);
             // Obtenemos el JsonObject a partir del JsonReader.
             JsonArray cartas = (JsonArray) reader.readObject().getJsonArray("cartas");
             for (JsonObject carta : cartas.getValuesAs(JsonObject.class)) {

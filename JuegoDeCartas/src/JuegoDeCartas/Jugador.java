@@ -7,6 +7,7 @@ public class Jugador {
 	
 	public Jugador(String nombre) {
 		this.nombre = nombre;
+		this.cartas = new Mazo();
 	}
 
 	public String getNombre() {
