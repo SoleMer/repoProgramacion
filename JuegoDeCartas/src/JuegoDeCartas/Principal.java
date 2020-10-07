@@ -1,13 +1,5 @@
 package JuegoDeCartas;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,41 +13,49 @@ public class Principal {
 		cargarJugadores(juego); // CARGO LOS JUGADORES
 		cargarCantidadDeRondas(juego); // CARGO LA CANTIDAD DE RONDAS
 		juego.repartirCartas(); // REPARTO LAS CARTAS
+		System.out.println(juego.getJugador1().getNombre() + " tiene "+ juego.getJugador1().getCantidadDeCartas() +" cartas");
+		System.out.println(juego.getJugador2().getNombre() + " tiene "+ juego.getJugador2().getCantidadDeCartas() +" cartas");
+		System.out.println(juego.getJugador1().getNombre() + " y " + juego.getJugador2().getNombre() + " jugaran " + juego.getRondas() + " rondas");
 
 		boolean juegoTerminado = false;
 		int ronda = 0;
-
+		
 		Jugador jugadorEnTurno = juego.getJugador1(); // LE DOY EL PRIMER TURNO AL JUGADOR 1
-		Jugador jugadorB = juego.getJugador2();
+		Personaje carta;
 
 		while (!juegoTerminado) {
 			ronda++; // SUMO UNA RONDA
 			System.out.println("Ronda " + ronda); // IMPRIMO EL NUMERO DE RONDA
 
-			Personaje cartaA = jugadorEnTurno.getUltimaCarta(); // OBTENGO UNA CARTA
-			String atributo = jugadorEnTurno.seleccionarAtributo(cartaA); // ELIGE EL ATRIBUTO POR EL QUE VA A JUGAR
+			Personaje cartaJ1 = juego.getJugador1().getPrimerCarta(); // OBTENGO UNA CARTA 
+			Personaje cartaJ2 = juego.getJugador2().getPrimerCarta();	//
+			
+			if(jugadorEnTurno.equals(juego.getJugador1())) {	//IDENTIFICO LA CARTA DEL JUGADOR EN TURNO
+				carta = cartaJ1;				
+			} else {	//VER EQUALS DE JUGADOR
+				carta = cartaJ2;
+			}
+			String atributo = jugadorEnTurno.seleccionarAtributo(carta); // ELIGE EL ATRIBUTO POR EL QUE VA A JUGAR
 			System.out.println(
 					"El jugador " + jugadorEnTurno.getNombre() + " selecciona competir por el atributo " + atributo);
+			
 			// IMPRIMO LA CARTA DE LOS DOS JUGADORES JUNTO AL NOMBRE Y VALOR DEL ATRIBUTO
-			System.out.println("La carta de " + jugadorEnTurno.getNombre() + " es " + cartaA.toString(atributo));
+			System.out.println("La carta de " + juego.getJugador1().getNombre() + " es " + cartaJ1.toString(atributo));
 
-			Personaje cartaB = jugadorB.getUltimaCarta();
-			System.out.println("La carta de " + jugadorB.getNombre() + " es " + cartaB.toString(atributo));
-
-			Jugador ganador = juego.getGanadorJugada(jugadorEnTurno, cartaA, cartaB, atributo); // VERIFICO QUE JUGADOR
-																								// GANO
-			System.out.println("Gana la ronda " + ganador.getNombre()); // IMPRIMO EL NOMBRE DEL GANADOR DE LA RONDA
-
-			juego.reasignarCartas(cartaA, cartaB, ganador); // EL GANADOR DE LA RONDA SE LLEVA LA CARTA DEL PERDEDOR
-
+			System.out.println("La carta de " + juego.getJugador2().getNombre() + " es " + cartaJ2.toString(atributo));
+			
+			Jugador ganador = juego.getGanadorJugada(cartaJ1, cartaJ2, atributo); // VERIFICO QUE JUGADOR GANO
+			if(ganador == null) System.out.println("Empate."); //SI NO HAY GANADOR, IMPRIMO EMPATE
+			else{															//SI HAY GANADOR
+				System.out.println("Gana la ronda " + ganador.getNombre()); // IMPRIMO EL NOMBRE DEL GANADOR DE LA RONDA
+				ganador.ganarCartas(cartaJ1, cartaJ2); // EL GANADOR DE LA RONDA SE LLEVA LAS DOS CARTAS
+				jugadorEnTurno = ganador; // EL JUGADOR QUE GANO LA RONDA ES EL QUE TIENE EL TURNO SIGUIENTE
+			}
+					
+			// IMPRIMO LA CANTIDAD DE CARTAS QUE LE QUEDA A CADA JUGADOR
 			System.out.println(juego.getJugador1().getNombre() + " posee ahora "
 					+ juego.getJugador1().getCantidadDeCartas() + " cartas, y " + juego.getJugador2().getNombre()
 					+ " posee ahora " + juego.getJugador2().getCantidadDeCartas() + " cartas.");
-			// IMPRIMO LA CANTIDAD DE CARTAS QUE LE QUEDA A CADA JUGADOR
-
-			jugadorEnTurno = ganador; // EL JUGADOR QUE GANO LA RONDA ES EL QUE TIENE EL TURNO SIGUIENTE
-			jugadorB = juego.getOtroJugador(ganador);
-			;
 
 			juegoTerminado = juego.terminado(ronda); // VERIFICO SI EL JUEGO SE TERMINO
 		}
@@ -93,22 +93,22 @@ public class Principal {
 	}
 
 	public static int pedirCantidadDeRondas() {
-		// PEDIR AL USUARIO QUE LO INGRESE POR TECLADO
-		System.out.println("Ingrese la cantidad de rondas que desea jugar.");
 
 		BufferedReader e = new BufferedReader(new InputStreamReader(System.in));
 		int cantidad = 0;
 
 		while (cantidad < 2 || cantidad > 30) { // MINIMO 2 RONDAS, MAXIMO 30 RONDAS
+			// PEDIR AL USUARIO QUE LO INGRESE POR TECLADO
+			System.out.println("Ingrese la cantidad de rondas que desea jugar.");
 			try {
 				cantidad = Integer.parseInt(e.readLine());
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				cantidad = 0;
 			}
 		}
 
-		if (cantidad % 2 != 0) { // TIENE QUE SER UN NUMERO PAR DE RONDAS
-			return cantidad++; // SI ES IMPAR LE SUMO UNA
+		if (!(cantidad % 2 == 0)) { // TIENE QUE SER UN NUMERO PAR DE RONDAS
+			return cantidad+1; // SI ES IMPAR LE SUMO UNA
 		}
 		return cantidad;
 	}

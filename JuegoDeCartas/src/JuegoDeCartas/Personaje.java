@@ -48,16 +48,15 @@ public class Personaje {
 		return this.getValor(atributo) > p.getValor(atributo);		//COMPARO LOS VALORES DEL MISMO ATRIBUTO EN LOS DOS PERSONAJES
 	}
 	
-	public boolean esDelMismoMazo(Personaje p) {
-		
-		if(this.getCantidadDeAtributos() == p.getCantidadDeAtributos()) {
-			int i=0;
-			while(i<this.caracteristicas.size()) {
-				if(! this.getNombreAtributo(i).equals(p.getNombreAtributo(i))) return false;
-				else i++;					
+	public boolean esDelMismoMazo(Personaje p) {		//VERIFICO QUE DOS CARTAS PERTENEZCAN AL MISMO MAZO
+		if(this.getCantidadDeAtributos() == p.getCantidadDeAtributos()) {	//SI TIENEN LA MISMA CANTIDAD DE ATRIBUTOS
+			int i=0;								
+			while(i<this.caracteristicas.size()) {	//RECORRO LOS ATRIBUTOS COMPARANDO QUE LOS NOMBRES COINCIDAN
+				if(! this.getNombreAtributo(i).equals(p.getNombreAtributo(i))) return false; //SI UNO NO COINCIDE RETORNO FALSE
+				else i++;		
 			}
-			return true;
+			return true;		//SI SALE DEL WHILE RETORNA TRUE
 		}
-		return false;
+		return false;			//SI TIENE DIFERENTE CANTIDAD DE ATRIBUTOS RETORNO FALSE
 	}
 }

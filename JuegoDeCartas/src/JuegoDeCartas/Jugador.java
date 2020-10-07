@@ -22,8 +22,10 @@ public class Jugador {
 		return cartas.getCantidadDeCartas();
 	}
 	
-	public Personaje getUltimaCarta() {
-		return this.cartas.get(cartas.getCantidadDeCartas() - 1);
+	public Personaje getPrimerCarta() {
+		Personaje carta = this.cartas.get(0);
+		this.cartas.quitarCarta(0);
+		return carta;
 	}
 	
 	public String seleccionarAtributo(Personaje p) {
@@ -31,19 +33,8 @@ public class Jugador {
 		return p.getNombreAtributo(i);
 	}
 	
-	public void ganarCarta(Personaje cartaA,Personaje cartaB,Jugador j) {
-		if(this.cartas.tengoCarta(cartaA)) {			//SI NO TENGO LA CARTA A ES PORQUE ES DEL OTRO JUGADOR
-			j.quitarCarta(cartaA);							//SE LA QUITO
-			cartas.addCarta(cartaA);						//LA AGREGO A MI COLECCION
-		}
-		else {
-			j.quitarCarta(cartaB);							//SI YA TENGO LA CARTA A, ME GANE LA B. SE LA QUITO AL OTRO JUGADOR
-			cartas.addCarta(cartaB);						//LA AGREGO A MI COLLECCION
-		}
-	}
-	
-	public void quitarCarta(Personaje p) {
-		cartas.quitarCarta(p);
+	public void ganarCartas(Personaje cartaA,Personaje cartaB) {
+		this.cartas.addCartas(cartaA, cartaB);
 	}
 	
 	public boolean tengoMasCartas(Jugador j) {		//VERIFICO SI TENGO MAS CARTAS QUE EL OTRO JUGADOR

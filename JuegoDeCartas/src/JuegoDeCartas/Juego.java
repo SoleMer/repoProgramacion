@@ -1,7 +1,5 @@
 package JuegoDeCartas;
 
-import java.util.Collections;
-
 public class Juego {
 
 	private Mazo mazo;
@@ -53,32 +51,16 @@ public class Juego {
 		mazo.mezclar();
 		for (int i = 0; i < mazo.getCantidadDeCartas(); i += 2) { // SUMO DE DOS EN DOS
 			Personaje p1 = mazo.get(i);
-			Personaje p2 = mazo.get(i++);
+			Personaje p2 = mazo.get(i+1);
 			jugador1.addCarta(p1); // UNA CARTA AL JUGADOR 1
 			jugador2.addCarta(p2); // LA SIGUIENTE AL JUGADOR 2
 		} // REPITE HASTA TERMINAR EL MAZO
 	}
 
-	public Jugador getGanadorJugada(Jugador j, Personaje cartaA, Personaje cartaB, String atributo) {
-		if (cartaA.leGana(cartaB, atributo)) { // LE PREGUNTO A LA CARTA A SI LE GANA A LA B 
-			return j; 							//LA CARTA A ES DEL JUGADOR QUE RECIBO POR PARAMETRO
-		}										//SI LA CARTA A GANA, RETORNO EL MISMO JUGADOR QUE RECIBI
-		return this.getOtroJugador(j);			//SI GANA LA CARTA B, PIDO EL OTRO JUGADOR PARA RETORNARLO
-	}
-	
-	public Jugador getOtroJugador(Jugador j) {
-		if(this.getJugador1().equals(j)){		//SI EL JUGADOR 1 ES IGUAL AL RECIBIDO POR PARAMETRO
-			return this.getJugador2();			//RETORNO EL JUGADOR 2
-		}
-		return this.getJugador1();				//SINO, RETORNO EL JUGADOR 1
-	}
-
-	public void reasignarCartas(Personaje cartaA, Personaje cartaB, Jugador ganador) {
-		if (ganador.equals(jugador1)) { 
-			jugador1.ganarCarta(cartaA, cartaB, this.getJugador2()); // EL JUGADOR QUE GANA LA RONDA SE GANA LA CARTA DEL OTRO
-		} else {
-			jugador2.ganarCarta(cartaA, cartaB, this.getJugador1());
-		}
+	public Jugador getGanadorJugada(Personaje cartaJ1, Personaje cartaJ2, String atributo) {
+		if (cartaJ1.leGana(cartaJ2, atributo)) return this.jugador1; // SI LA CARTA DE JUGADOR 1 LE GANA A LA DEL JUGADOR 2 RETORNO EL JUGADOR 1
+		else if(cartaJ2.leGana(cartaJ1, atributo))	return this.jugador2;//SINO RETORNO EL JUGADOR 2
+		else return null;												//SI ES EMPATE RETORNO NULL
 	}
 	
 	public boolean terminado(int ronda) {  //SI UNO DE LOS DOS SE QUEDA SIN CARTAS O SI SE TERMINO LA CANTIDAD DE RONDAS, EL JUEGO SE TERMINA

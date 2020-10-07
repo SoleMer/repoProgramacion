@@ -25,7 +25,12 @@ public class Mazo {
 		}else if(cartas.get(0).esDelMismoMazo(p)) {		//SI NO ESTA VACIO VERIFICO QUE SEA DEL MISMO MAZO QUE LA PRIMERA
 			cartas.add(p);								//SI COINCIDE LA AGREGO
 		}
-	}										
+	}			
+	
+	public void addCartas(Personaje cartaA, Personaje cartaB) {
+		this.cartas.add(cartaA);
+		this.cartas.add(cartaB);
+	}
 	
 	public int getCantidadDeCartas() {
 		return cartas.size();			//RETORNOLA CANTIDAD DE CARTAS
@@ -43,8 +48,7 @@ public class Mazo {
 		return !this.cartas.contains(p);			//CORROBORO SI TENGO LA CARTA RECIBIDA POR PARAMETRO
 	}
 	
-	public void quitarCarta(Personaje p) {
-		int i = cartas.indexOf(p);				//BUSCO LA POSICION DE LA CARTA QUE PERDI
+	public void quitarCarta(int i) {			//BUSCO LA POSICION DE LA CARTA QUE PERDI
 		cartas.remove(i);						//LA ELIMINO DE MI COLECCION
 	}
 	
