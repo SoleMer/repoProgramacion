@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import Estrategias.EstrategiaAmbicioso;
+import Estrategias.EstrategiaObstinado;
+
 public class Principal {
 
 	public static void main(String[] args) {
@@ -12,6 +15,7 @@ public class Principal {
 		Juego juego = new Juego(mazo); // CREO EL JUEGO
 		cargarJugadores(juego); // CARGO LOS JUGADORES
 		cargarCantidadDeRondas(juego); // CARGO LA CANTIDAD DE RONDAS
+		juego.cargarPocimas();		//CARGO LAS POCIMAS
 		juego.repartirCartas(); // REPARTO LAS CARTAS
 		System.out.println(juego.getJugador1().getNombre() + " tiene "+ juego.getJugador1().getCantidadDeCartas() +" cartas");
 		System.out.println(juego.getJugador2().getNombre() + " tiene "+ juego.getJugador2().getCantidadDeCartas() +" cartas");
@@ -21,14 +25,14 @@ public class Principal {
 		int ronda = 0;
 		
 		Jugador jugadorEnTurno = juego.getJugador1(); // LE DOY EL PRIMER TURNO AL JUGADOR 1
-		Personaje carta;
+		Carta carta;
 
 		while (!juegoTerminado) {
 			ronda++; // SUMO UNA RONDA
 			System.out.println("Ronda " + ronda); // IMPRIMO EL NUMERO DE RONDA
 
-			Personaje cartaJ1 = juego.getJugador1().getPrimerCarta(); // OBTENGO UNA CARTA 
-			Personaje cartaJ2 = juego.getJugador2().getPrimerCarta();	//
+			Carta cartaJ1 = juego.getJugador1().getPrimerCarta(); // OBTENGO UNA CARTA 
+			Carta cartaJ2 = juego.getJugador2().getPrimerCarta();	//
 			
 			if(jugadorEnTurno.equals(juego.getJugador1())) {	//IDENTIFICO LA CARTA DEL JUGADOR EN TURNO
 				carta = cartaJ1;				
@@ -67,8 +71,10 @@ public class Principal {
 	public static void cargarJugadores(Juego j) {
 		String nombreJ1 = pedirJugador(); // CARGO LOS NOMBRES DE LOS JUGADORES
 		String nombreJ2 = pedirJugador();
-		Jugador j1 = new Jugador(nombreJ1); // CREO LOS JUGADORES
-		Jugador j2 = new Jugador(nombreJ2);
+		EstrategiaObstinado eJ1 = new EstrategiaObstinado("fuerza");
+		EstrategiaAmbicioso eJ2 = new EstrategiaAmbicioso();
+		Jugador j1 = new Jugador(nombreJ1, eJ1);	// CREO LOS JUGADORES
+		Jugador j2 = new Jugador(nombreJ2, eJ2);	//CON LAS ESTRATEGIAS
 
 		j.setJugadores(j1, j2); // LOS SETEO EN EL JUEGO
 	}

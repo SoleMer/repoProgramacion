@@ -13,13 +13,13 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 
 public class Mazo {
-	private ArrayList<Personaje> cartas;
+	private ArrayList<Carta> cartas;
 	
 	public Mazo() {
 		this.cartas = new ArrayList<>();
 	}
 	
-	public void addCarta(Personaje p) {
+	public void addCarta(Carta p) {
 		if(cartas.isEmpty()) {							//SI EL MAZO ESTA VACIO AGREGO
 			cartas.add(p);								//AGREGO LA CARTA			
 		}else if(cartas.get(0).esDelMismoMazo(p)) {		//SI NO ESTA VACIO VERIFICO QUE SEA DEL MISMO MAZO QUE LA PRIMERA
@@ -27,7 +27,7 @@ public class Mazo {
 		}
 	}			
 	
-	public void addCartas(Personaje cartaA, Personaje cartaB) {
+	public void addCartas(Carta cartaA, Carta cartaB) {
 		this.cartas.add(cartaA);
 		this.cartas.add(cartaB);
 	}
@@ -40,11 +40,11 @@ public class Mazo {
 		Collections.shuffle(cartas);
 	}
 	
-	public Personaje get(int i) {
+	public Carta get(int i) {
 		return cartas.get(i);			//OBTENGO LA CARTA EN LA POSICION SELECCTIONADA
 	}
 	
-	public boolean tengoCarta(Personaje p) {
+	public boolean tengoCarta(Carta p) {
 		return !this.cartas.contains(p);			//CORROBORO SI TENGO LA CARTA RECIBIDA POR PARAMETRO
 	}
 	
@@ -65,15 +65,15 @@ public class Mazo {
 			JsonArray cartas = (JsonArray) reader.readObject().getJsonArray("cartas");
 			for (JsonObject carta : cartas.getValuesAs(JsonObject.class)) {
 				String nombreCarta = carta.getString("nombre");
-				Personaje p = new Personaje(nombreCarta);
+				Carta c = new Carta(nombreCarta);
 
 				JsonObject atributos = (JsonObject) carta.getJsonObject("atributos");
 				for (String nombreAtributo : atributos.keySet()) {
-					Caracteristica c = new Caracteristica(nombreAtributo, atributos.getInt(nombreAtributo));
-					p.addCaracteristica(c);
+					Atributo a = new Atributo(nombreAtributo, atributos.getInt(nombreAtributo));
+					c.addCaracteristica(a);
 				}
 
-				mazo.addCarta(p);
+				mazo.addCarta(c);
 			}
 			reader.close();
 		} catch (FileNotFoundException e) {
@@ -82,4 +82,5 @@ public class Mazo {
 		}
 		return mazo;
 	}
+
 }
